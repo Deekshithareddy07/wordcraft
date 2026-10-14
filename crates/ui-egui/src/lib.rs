@@ -1110,7 +1110,7 @@ impl WordApp {
             // MCP get an error.
             "ui.makeDefaultApp" => {
                 return Some(Err(
-                    "making WordCraft the default app needs a click in File › Options › General; scripts and agents can't change system defaults"
+                    "making Writekit the default app needs a click in File › Options › General; scripts and agents can't change system defaults"
                         .into(),
                 ));
             }
@@ -1162,20 +1162,20 @@ impl WordApp {
     /// command, so nothing programmatic (control channel, MCP, macros) can change system defaults.
     pub(crate) fn make_default_app(&mut self) -> Result<Value, String> {
         let Some(hook) = self.services.make_default_app.as_ref() else {
-            return Err("WordCraft can't change the default apps here; use your system's settings".into());
+            return Err("Writekit can't change the default apps here; use your system's settings".into());
         };
         match hook() {
             Ok(DefaultApp::SettingsOpened) => {
-                self.status(tl!("In Default apps, choose WordCraft for the document types you want it to open."));
+                self.status(tl!("In Default apps, choose Writekit for the document types you want it to open."));
                 Ok(json!({"settingsOpened": true}))
             }
             Ok(DefaultApp::MadeDefault) => {
-                self.status(tl!("WordCraft is now the default app for Word documents."));
+                self.status(tl!("Writekit is now the default app for Word documents."));
                 Ok(json!({"default": true}))
             }
             Err(e) => {
                 log::warn!("make default app: {e}");
-                let msg = i18n::fmt(tl!("Couldn't make WordCraft the default: {error}"), &[("error", &e)]);
+                let msg = i18n::fmt(tl!("Couldn't make Writekit the default: {error}"), &[("error", &e)]);
                 self.status(msg.clone());
                 Err(msg)
             }
@@ -1537,7 +1537,7 @@ impl WordApp {
         if let Some(url) = self.canvas.open_url.take() {
             ctx.open_url(egui::OpenUrl::new_tab(url));
         }
-        let title = format!("{}{} - WordCraft", self.title_stem(), if self.session.dirty { " •" } else { "" });
+        let title = format!("{}{} - Writekit", self.title_stem(), if self.session.dirty { " •" } else { "" });
         if title != self.sent_title {
             ctx.send_viewport_cmd(egui::ViewportCommand::Title(title.clone()));
             self.sent_title = title;
@@ -3025,7 +3025,7 @@ mod tests {
     #[test]
     fn the_default_app_button_shows_only_with_the_hosts_hook() {
         use egui_kittest::kittest::Queryable;
-        const LABEL: &str = "Make WordCraft the default for Word documents…";
+        const LABEL: &str = "Make Writekit the default for Word documents…";
         for hook in [false, true] {
             let calls = std::rc::Rc::new(std::cell::Cell::new(0));
             let mut a = app();
